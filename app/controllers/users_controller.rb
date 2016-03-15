@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :find_user, only: [:show, :edit, :update, :destroy]
+  before_action :find_user, only: [:show, :edit, :update, :destroy, :change_password, :check_password]
 
   def new
     @user = User.new
@@ -23,14 +23,18 @@ class UsersController < ApplicationController
   end
 
   def update
-    if @user.update user_params
-      redirect_to user_path(@user), notice: "Profile updated successfully."
+    if password_checks_ok? && (@user.update user_params)
+      redirect_to @user, notice: "Profile updated successfully."
     else
-      flash[:notice] = "Profile not updated."
+      flash[:alert] = "Profile not updated."
+      (params[:user]["password"].present?) ? (render :change_password) : (render :edit)
     end
   end
 
   def destroy
+  end
+
+  def change_password
   end
 
   private
@@ -41,5 +45,15 @@ class UsersController < ApplicationController
 
   def find_user
     @user = User.find current_user.id
+  end
+
+  def password_checks_ok?
+    new_password = params[:user]["password"]
+    old_password = params[:user]["current_password"]
+
+    authenticated_user = @user.authenticate(old_password)
+    passwords_different = (old_password != new_password)
+
+    authenticated_user && passwords_different
   end
 end

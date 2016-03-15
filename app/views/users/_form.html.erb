@@ -10,9 +10,7 @@
   <%= f.input :first_name %>
   <%= f.input :last_name %>
   <%= f.input :email %>
-  <% if user_signed_in?%>
-    <%= f.input :current_password %>
-  <% else %>
+  <% unless user_signed_in?%>
     <%= f.input :password %>
     <%= f.input :password_confirmation %>
   <% end %>
