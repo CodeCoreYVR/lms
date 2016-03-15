@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  root "sessions#new"
+  root 'welcome#home'
   get 'password_resets/new'
 
   resources :users do
