@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :find_user, only: [:show, :edit, :update, :destroy, :change_password, :check_password]
+  before_action :find_user, only: [:show, :edit, :update, :destroy, :check_password]
 
   def new
     @user = User.new
@@ -35,6 +35,7 @@ class UsersController < ApplicationController
   end
 
   def change_password
+    @user = User.find params[:user_id]
   end
 
   private
