@@ -1,0 +1,9 @@
+<h1>Your Profile</h1>
+
+<p>First Name: <%= @user.first_name %></p>
+<p>Last Name: <%= @user.last_name %></p>
+<p>Email: <%= @user.email %></p>
+
+<%= link_to "Edit Profile", edit_user_path(@user) %>
+
+<%= link_to "Log Out", sessions_path, method: :delete, data: {confirm: "Are you sure you want to log out?"} %>
