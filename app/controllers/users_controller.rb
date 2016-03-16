@@ -23,11 +23,11 @@ class UsersController < ApplicationController
   end
 
   def update
-    if password_checks_ok? && (@user.update user_params)
-      redirect_to user_path(@user), notice: "Profile updated successfully."
+    if (params[:user][:password].blank? || password_checks_ok?) && (@user.update user_params)
+      redirect_to @user, notice: "Profile updated successfully."
     else
       flash[:alert] = "Profile not updated."
-      (params[:user]["password"].present?) ? (render :change_password) : (render :edit)
+      (params[:user][:password].present?) ? (render :change_password) : (render :edit)
     end
   end
 
