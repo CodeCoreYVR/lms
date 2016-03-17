@@ -49,7 +49,6 @@ RSpec.describe User, type: :model do
 
   describe ".full_name" do
     it "concatenates the first name and last name" do
-      # user = FactoryGirl.build(:user, first_name: "Rahul", last_name: "Mc Laughlin")
       expect(user.full_name).to eq("#{user.first_name} #{user.last_name}")
     end
     it "returns the first name if the last name is missing" do
@@ -69,14 +68,18 @@ RSpec.describe User, type: :model do
     it "generates a new password_reset_token" do
       expect{user.send_password_reset}.to change(user, :password_reset_token)
     end
-    it "updates password_reset_sent_at with the current datetime" do
-      user.send_password_reset # password_reset_sent_at is `nil` for new users
-      last_reset = user.password_reset_sent_at
-      user.send_password_reset
-      expect(user.password_reset_sent_at).to be >=(last_reset)
+    it "updates password_reset_sent_at" do
+      expect{user.send_password_reset}.to change{user.password_reset_sent_at}
     end
     it "sends a password reset email to the user" do
       expect{user.send_password_reset}.to change{ActionMailer::Base.deliveries.count}.by(1)
+    end
+  end
+
+  describe ".generate_token" do
+    it "generates a new SecureRandom token in the given column" do
+      col = :password_reset_token
+      expect{user.generate_token(col)}.to change{user[col]}
     end
   end
 end
